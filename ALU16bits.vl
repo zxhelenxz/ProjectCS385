@@ -23,10 +23,9 @@ module ALU (op,a,b,result,zero);
     ALU1   alu12 (a[12],b[12],op[2],op[1:0],1'b0,  c12,   c13,result[12]);
     ALU1   alu13 (a[13],b[13],op[2],op[1:0],1'b0,  c13,   c14,result[13]);
     ALU1   alu14 (a[14],b[14],op[2],op[1:0],1'b0,  c14,   c15,result[14]);
-
-    ALUmsb alu15 (a[15],b[15],op[2],op[1:0],1'b0,c15,c16,result[15],set);
-
-    or or1(or01, result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15]);
+    ALUmsb alu15 (a[15],b[15],op[2],op[1:0],1'b0,  c15,   c16,result[15],set);
+    
+    or  or1(or01, result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15]);
     not not1(zero, or01);
 endmodule
 
@@ -91,35 +90,35 @@ module mux2x1(A,B,select,OUT);
    input A,B,select; 
    output OUT; 
    wire wire0, wire1; 
-   not not1(notS,S);
-   and and1(wire0, A,notS),
-       and2(wire1, B,S);
-   or  or1 (OUT,wire0,wire1);
+   not not1 (notS,select);
+   and and1 (wire0, A,notS),
+       and2 (wire1, B,select);
+   or  or1  (OUT,wire0,wire1);
 endmodule 
 
 module mux4x1(i0,i1,i2,i3,select,y); 
 
-output y;   			 // Output
-input i0, i1, i2, i3;    // Input ports.  
-input [1:0] select; 			//  Select lines.  
+   output y;   			 // Output
+   input i0, i1, i2, i3;    // Input ports.  
+   input [1:0] select; 			//  Select lines.  
   
-// intermediate wires  
-wire inv0, inv1; // Inverter outputs.  
-wire a0, a1, a2, a3; // AND gates outputs.  
+   // intermediate wires  
+   wire inv0, inv1; // Inverter outputs.  
+   wire a0, a1, a2, a3; // AND gates outputs.  
   
-// Inverters.  
-not not_0 (inv1, select[1]);  
-not not_1 (inv0, select[0]);  
+   // Inverters.  
+   not not_1 (inv1, select[1]);  
+   not not_0 (inv0, select[0]);  
   
-// 4-input AND gates.  
-and and_0 (a0, i0, inv1, inv0);  
-and and_1 (a1, i1, inv1, select[0]);  
-and and_2 (a2, i2, select[1], inv0);  
-and and_3 (a3, i3, select[1], select[0]);  
+   // 4-input AND gates.  
+   and and_0 (a0, i0, inv1, inv0);  
+   and and_1 (a1, i1, inv1, select[0]);  
+   and and_2 (a2, i2, select[1], inv0);  
+   and and_3 (a3, i3, select[1], select[0]);  
   
-// 4-input OR gate.  
-or or_0 (y, a0, a1, a2, a3);  
-  endmodule 
+   // 4-input OR gate.  
+   or or_0 (y, a0, a1, a2, a3);  
+ endmodule 
 
 
 // Test Module 
